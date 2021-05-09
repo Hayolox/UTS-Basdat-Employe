@@ -32,7 +32,7 @@
                                             <td>{{ $notif->essn }}</td>
                                             <td>{{ $notif->notif }}</td>
 
-                                             </td>
+
                                             </tr>
                                         @endforeach
 
