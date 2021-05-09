@@ -21,7 +21,7 @@
                                             <th scope="col">No</th>
                                             <th scope="col">Essn</th>
                                             <th scope="col">Notification</th>
-
+                                            <th scope="col">Action</th>
 
                                             </tr>
                                         </thead>
