@@ -31,6 +31,13 @@
                                             <th scope="row">{{ $notifs->firstItem() +$key }}</th>
                                             <td>{{ $notif->essn }}</td>
                                             <td>{{ $notif->notif }}</td>
+                                            <td>
+                                                <form action="{{ route('notif-delete', $notif->id_notif) }}" method="POST">
+                                                    @method('delete')
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-danger">delete</button>
+                                                </form>
+                                            </td>
 
 
                                             </tr>
