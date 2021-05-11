@@ -34,8 +34,8 @@ class DeplocationController extends Controller
                     Action
                 </button>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="'.route('deplocation.edit',$item->Dnumber).'">Edit</a>
-                        <form Onsubmit = " return confirm(\'yakin Hapus Data?\')" action="'.route('deplocation.destroy',$item->Dnumber).'" method="POST" >
+                        <a class="dropdown-item" href="'.route('deplocation.edit',$item->Id_Location).'">Edit</a>
+                        <form Onsubmit = " return confirm(\'yakin Hapus Data?\')" action="'.route('deplocation.destroy',$item->Id_Location).'" method="POST" >
                             '. method_field('delete'). csrf_field() .'
 
                             <button type="submit" class="dropdown-item text-danger "> Delete</button>

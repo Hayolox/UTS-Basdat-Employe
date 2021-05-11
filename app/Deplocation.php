@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Deplocation extends Model
 {
     protected $table = 'dept_locations';
-    protected $primaryKey = 'Dnumber';
+    protected $primaryKey = 'Id_Location';
     public $incrementing = false;
     public $timestamps = false;
 
