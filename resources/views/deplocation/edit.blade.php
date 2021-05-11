@@ -15,7 +15,7 @@
                                Edit  DataTable Deplocation
                             </div>
                             <div class="card-body">
-                               <form method="POST" action="{{ route('deplocation.update',$deplocation->Dnumber) }}" >
+                               <form method="POST" action="{{ route('deplocation.update',$deplocation->Id_Location) }}" >
                                    @method('PUT')
                                    @csrf
                                 <div class="form-group">
