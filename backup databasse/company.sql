@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 08 Bulan Mei 2021 pada 08.37
+-- Waktu pembuatan: 17 Bulan Mei 2021 pada 16.19
 -- Versi server: 10.4.18-MariaDB
 -- Versi PHP: 7.4.16
 
@@ -58,7 +58,11 @@ INSERT INTO `department` (`Dnumber`, `Dname`, `Mgr_ssn`, `Mgr_start_date`) VALUE
 -- Trigger `department`
 --
 DELIMITER $$
-CREATE TRIGGER `DeleteDependent` BEFORE DELETE ON `department` FOR EACH ROW UPDATE employee SET employee.Dno = NULL WHERE employee.Dno = old.Dnumber
+CREATE TRIGGER `DeleteDepartment` BEFORE DELETE ON `department` FOR EACH ROW UPDATE employee SET employee.Dno = NULL WHERE employee.Dno = old.Dnumber
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `DeleteDepartment2` BEFORE DELETE ON `department` FOR EACH ROW UPDATE employee SET employee.Super_ssn = NULL WHERE employee.Super_ssn = old.Mgr_ssn
 $$
 DELIMITER ;
 
@@ -322,16 +326,6 @@ CREATE TRIGGER `cek_add_hours` AFTER INSERT ON `works_on` FOR EACH ROW IF((SELEC
 $$
 DELIMITER ;
 DELIMITER $$
-CREATE TRIGGER `cek_delete` AFTER DELETE ON `works_on` FOR EACH ROW IF((SELECT SUM(hours) FROM works_on WHERE essn = old.essn) > 40) THEN
-	INSERT INTO notification(essn, notif) VALUES
-		(old.essn,'Pegawai melewati batas jam kerja');
-	ELSEIF ((SELECT SUM(hours) FROM works_on WHERE essn = old.essn) < 30) THEN
-	INSERT INTO notification(essn, notif) VALUES
-		(old.essn,'Pegawai memiliki jam kerja diabawah batas');
-	END IF
-$$
-DELIMITER ;
-DELIMITER $$
 CREATE TRIGGER `cek_update` AFTER UPDATE ON `works_on` FOR EACH ROW IF((SELECT SUM(hours) FROM works_on WHERE essn = old.essn) > 40) THEN
 	INSERT INTO notification(essn, notif) VALUES
 		(old.essn,'Pegawai melewati batas jam kerja');
@@ -359,13 +353,6 @@ DELIMITER $$
 CREATE TRIGGER `hapusnotif_update` AFTER UPDATE ON `works_on` FOR EACH ROW IF((SELECT SUM(hours) FROM works_on WHERE essn = new.essn) <=40 AND (SELECT SUM(hours) FROM works_on WHERE essn = new.essn) >=30) THEN
 	DELETE FROM notification  WHERE
 		essn = new.essn;
- END IF
-$$
-DELIMITER ;
-DELIMITER $$
-CREATE TRIGGER `notifkosong` AFTER DELETE ON `works_on` FOR EACH ROW IF((SELECT SUM(hours) FROM works_on WHERE essn = old.essn) = NULL AND (SELECT SUM(hours) FROM works_on WHERE essn = old.essn) =NULL) THEN
-	DELETE FROM notification  WHERE
-		essn = old.essn;
  END IF
 $$
 DELIMITER ;
@@ -455,7 +442,7 @@ ALTER TABLE `works_on`
 -- AUTO_INCREMENT untuk tabel `dependent`
 --
 ALTER TABLE `dependent`
-  MODIFY `Id_Dependent` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `Id_Dependent` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT untuk tabel `failed_jobs`
@@ -473,7 +460,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT untuk tabel `notification`
 --
 ALTER TABLE `notification`
-  MODIFY `id_notif` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_notif` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`
@@ -485,7 +472,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT untuk tabel `works_on`
 --
 ALTER TABLE `works_on`
-  MODIFY `Id_Works` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `Id_Works` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
@@ -519,8 +506,8 @@ ALTER TABLE `project`
 -- Ketidakleluasaan untuk tabel `works_on`
 --
 ALTER TABLE `works_on`
-  ADD CONSTRAINT `works_on_ibfk_1` FOREIGN KEY (`Essn`) REFERENCES `employee` (`ssn`),
-  ADD CONSTRAINT `works_on_ibfk_2` FOREIGN KEY (`Pno`) REFERENCES `project` (`Pnumber`);
+  ADD CONSTRAINT `works_on_ibfk_1` FOREIGN KEY (`Essn`) REFERENCES `employee` (`ssn`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `works_on_ibfk_2` FOREIGN KEY (`Pno`) REFERENCES `project` (`Pnumber`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
